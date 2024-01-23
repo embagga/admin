@@ -11,6 +11,16 @@ const routes = [
     component: () => import('@/views/pages/Login'),
   },
   {
+    path: '/forgot-password',
+    name: 'Forgot Password',
+    component: () => import('@/views/pages/ForgotPassword'),
+  },
+  {
+    path: '/reset',
+    name: 'Reset Password',
+    component: () => import('@/views/pages/ResetPassword'),
+  },
+  {
     path: '/portal',
     name: 'Home',
     component: DefaultLayout,

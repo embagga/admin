@@ -9,8 +9,9 @@
                 <CForm class="text-center">
                   <img class="w-25" :src="LogoImg" alt="logo" />
                   <h4 class="text-medium-emphasis mb-5">
-                    Administration Login
+                    Administration Reset Password
                   </h4>
+
                   <CInputGroup class="mb-3">
                     <CInputGroupText>
                       <CIcon :content="cilPhone" />
@@ -18,21 +19,40 @@
                     <CFormInput
                       placeholder="Phone Number"
                       autocomplete="phonenumber"
-                      type="tel"
+                      type="text"
                       v-model="form.phoneNumber"
                     />
                   </CInputGroup>
+
+                  <CInputGroup class="mb-3">
+                    <CInputGroupText>
+                      <CIcon :content="cilPin" />
+                    </CInputGroupText>
+                    <CFormInput placeholder="Code" v-model="form.code" />
+                  </CInputGroup>
+
                   <CInputGroup class="mb-4">
                     <CInputGroupText>
                       <CIcon icon="cil-lock-locked" />
                     </CInputGroupText>
                     <CFormInput
                       type="password"
-                      placeholder="Password"
-                      autocomplete="current-password"
+                      placeholder="New Password"
                       v-model="form.password"
                     />
                   </CInputGroup>
+
+                  <CInputGroup class="mb-4">
+                    <CInputGroupText>
+                      <CIcon icon="cil-lock-locked" />
+                    </CInputGroupText>
+                    <CFormInput
+                      type="password"
+                      placeholder="Confirm Password"
+                      v-model="form.confirmPassword"
+                    />
+                  </CInputGroup>
+
                   <CRow>
                     <CCol :xs="6" class="text-start">
                       <CButton
@@ -41,13 +61,11 @@
                         color="primary"
                         class="px-4"
                       >
-                        Login
+                        Reset Password
                       </CButton>
                     </CCol>
                     <CCol :xs="6" class="text-end">
-                      <CLink href="#/forgot-password" >
-                        Forgot password?
-                      </CLink>
+                      <CLink href="#/"> Login </CLink>
                     </CCol>
                   </CRow>
                 </CForm>
@@ -62,7 +80,7 @@
 
 <script>
 import LogoImg from '@/assets/images/logo.jpg'
-import { cilPhone } from '@coreui/icons'
+import { cilPhone, cilPin } from '@coreui/icons'
 import Bee from '@/utils/Bee'
 export default {
   name: 'Login',
@@ -70,9 +88,12 @@ export default {
     return {
       LogoImg: LogoImg,
       cilPhone,
+      cilPin,
       form: {
         phoneNumber: '',
+        code: '',
         password: '',
+        confirmPassword: '',
       },
     }
   },
@@ -81,32 +102,19 @@ export default {
       //
       var vm = this
       var data = {
-        _f_login: {
+        _f_change: {
           email: vm.form.phoneNumber,
+          app_name: 'kev_lyn_managment',
+          code: vm.form.code,
           password: vm.form.password,
         },
       }
-      console.log('data:', data)
+      console.log('change password data:', data)
       //remove token
       Bee.token = ''
       Bee.post(data, false, vm)
         .then((res) => {
-          let user = res._f_login.user
-          var isAdmin = false
-          for (let index = 0; index < user.user_roles.length; index++) {
-            const user_role = user.user_roles[index]
-            if (parseInt(user_role.role_id) <= 2) {
-              isAdmin = true
-              break
-            }
-          }
-          if (isAdmin) {
-            localStorage.setItem('token', res._f_login.token)
-            localStorage.setItem('user', JSON.stringify(user))
-            vm.$router.push('/dashboard')
-          } else {
-            console.log('Admin account not found')
-          }
+          vm.$router.push('/')
         })
         .catch((errors) => {
           console.log('Errors', errors)

@@ -2,11 +2,14 @@
   <CRow>
     <CCol :xs="12">
       <CCard class="mb-4">
-        <CCardHeader class="flex  justify-between">
-            <span>
-                Manage <strong>Event Types</strong>
-            </span>
-          <CButton color="primary" class="float-right" size="sm" @click.prevent="handleClickAdd()">
+        <CCardHeader class="flex justify-between">
+          <span> Manage <strong>Event Types</strong> </span>
+          <CButton
+            color="primary"
+            class="float-right"
+            size="sm"
+            @click.prevent="handleClickAdd()"
+          >
             Add
           </CButton>
         </CCardHeader>
@@ -17,6 +20,7 @@
                 <CTableHeaderCell scope="col">#</CTableHeaderCell>
                 <CTableHeaderCell scope="col">NAME</CTableHeaderCell>
                 <CTableHeaderCell scope="col">DESCRIPTION</CTableHeaderCell>
+                <CTableHeaderCell scope="col">STATUS</CTableHeaderCell>
                 <CTableHeaderCell scope="col"></CTableHeaderCell>
               </CTableRow>
             </CTableHead>
@@ -25,6 +29,7 @@
                 <CTableHeaderCell scope="row">{{ index + 1 }}</CTableHeaderCell>
                 <CTableDataCell>{{ row.name }}</CTableDataCell>
                 <CTableDataCell>{{ row.description }}</CTableDataCell>
+                <CTableDataCell>{{ row.status }}</CTableDataCell>
                 <CTableDataCell width="200 text-end">
                   <CButton
                     color="warning"
@@ -61,6 +66,16 @@
             <CInputGroupText> Name: </CInputGroupText>
             <CFormInput v-model="form.name" />
           </CInputGroup>
+          <CInputGroup class="mb-3">
+            <CInputGroupText>Status: </CInputGroupText>
+            <CFormSelect
+              v-model="form.status"
+              :options="[
+                { value: 'enabled', label: 'Enabled' },
+                { value: 'disabled', label: 'Disabled' },
+              ]"
+            />
+          </CInputGroup>
           <CInputGroup class="mb-4">
             <CInputGroupText> Description </CInputGroupText>
             <CFormTextarea v-model="form.description" />
@@ -83,6 +98,7 @@ const getFormData = () => {
   return {
     name: '',
     description: '',
+    status: 'enabled',
     id: 0,
   }
 }
@@ -116,6 +132,7 @@ export default {
     handleClickEdit(row) {
       this.form.id = row.id
       this.form.name = row.name
+      this.form.status = row.status
       this.form.description = row.description
       this.mode = 'edit'
       this.showModal = true
@@ -143,22 +160,23 @@ export default {
     },
     onHandleSubmit() {
       var thisVM = this
-      var method = "post";
+      var method = 'post'
       var data = {
         event_type: {
           name: thisVM.form.name,
-          description: thisVM.form.description
+          status: thisVM.form.status,
+          description: thisVM.form.description,
         },
       }
-      if(thisVM.mode === "edit"){
-        data.event_type._w = [['id', 'e', thisVM.form.id]];
-        method = "update"
+      if (thisVM.mode === 'edit') {
+        data.event_type._w = [['id', 'e', thisVM.form.id]]
+        method = 'update'
       }
       //add token
       Bee.token = localStorage.getItem('token')
       Bee[method](data, false, thisVM)
         .then((res) => {
-          thisVM.loadData();
+          thisVM.loadData()
         })
         .catch((errors) => {
           console.log('Errors', errors)

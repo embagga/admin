@@ -17,6 +17,7 @@
                 <CTableHeaderCell scope="col">#</CTableHeaderCell>
                 <CTableHeaderCell scope="col">NAME</CTableHeaderCell>
                 <CTableHeaderCell scope="col">DESCRIPTION</CTableHeaderCell>
+                <CTableHeaderCell scope="col">STATUS</CTableHeaderCell>
                 <CTableHeaderCell scope="col"></CTableHeaderCell>
               </CTableRow>
             </CTableHead>
@@ -25,6 +26,7 @@
                 <CTableHeaderCell scope="row">{{ index + 1 }}</CTableHeaderCell>
                 <CTableDataCell>{{ row.name }}</CTableDataCell>
                 <CTableDataCell>{{ row.description }}</CTableDataCell>
+                <CTableDataCell>{{ row.status }}</CTableDataCell>
                 <CTableDataCell width="200 text-end">
                   <CButton
                     color="warning"
@@ -61,6 +63,16 @@
             <CInputGroupText> Name: </CInputGroupText>
             <CFormInput v-model="form.name" />
           </CInputGroup>
+          <CInputGroup class="mb-3">
+            <CInputGroupText>Status: </CInputGroupText>
+            <CFormSelect
+              v-model="form.status"
+              :options="[
+                { value: 'enabled', label: 'Enabled' },
+                { value: 'disabled', label: 'Disabled' },
+              ]"
+            />
+          </CInputGroup>
           <CInputGroup class="mb-4">
             <CInputGroupText> Description </CInputGroupText>
             <CFormTextarea v-model="form.description" />
@@ -83,6 +95,7 @@ const getFormData = () => {
   return {
     name: '',
     description: '',
+    status: 'enabled',
     id: 0,
   }
 }
@@ -116,6 +129,7 @@ export default {
     handleClickEdit(row) {
       this.form.id = row.id
       this.form.name = row.name
+      this.form.status = row.status
       this.form.description = row.description
       this.mode = 'edit'
       this.showModal = true
@@ -147,6 +161,7 @@ export default {
       var data = {
         expense_type: {
           name: thisVM.form.name,
+          status: thisVM.form.status,
           description: thisVM.form.description
         },
       }
