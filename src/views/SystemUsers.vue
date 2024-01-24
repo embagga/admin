@@ -198,6 +198,8 @@ export default {
           email: thisVM.form.email,
         },
       }
+      var rnd = Math.floor(Math.random() * (max - min + 1) + min)
+      var password = 'Psw-' + rnd
       if (thisVM.mode === 'edit') {
         data.user._w = [['id', 'e', thisVM.form.id]]
         method = 'update'
@@ -205,8 +207,7 @@ export default {
       } else {
         var min = 1000
         var max = 9999
-        var rnd = Math.floor(Math.random() * (max - min + 1) + min)
-        var password = 'Psw-' + rnd
+
         var data = {
           _f_signup: {
             user: {
@@ -223,7 +224,21 @@ export default {
       }
       Bee[method](data, false, thisVM)
         .then((res) => {
+          Bee.token = localStorage.getItem('token')
           thisVM.loadData()
+          if (thisVM.mode != 'edit') {
+            var sms = `Hello ${thisVM.form.name}, your embagga admin credentials are: `
+            sms = `${sms}. Username is ${thisVM.form.email}, password is ${password}`
+            var msg = {
+              _f_mail: {
+                sms: {
+                  phone_number: thisVM.form.email,
+                  message: sms,
+                },
+              },
+            }
+            Bee.post(msg, false, thisVM)
+          }
         })
         .catch((errors) => {
           console.log('Errors', errors)
