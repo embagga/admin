@@ -1,4 +1,4 @@
-import {cilBeachAccess, cilMoney } from '@coreui/icons'
+import {cilBeachAccess, cilMoney, cilUser } from '@coreui/icons'
 export default [
   {
     component: 'CNavItem',
@@ -60,9 +60,21 @@ export default [
   },
   {
     component: 'CNavItem',
-    name: 'Tables',
-    to: '/base/tables',
+    name: 'System Users',
+    to: '/system-users',
+    icon: {
+      content: cilUser
+    }
+    // badge: {
+    //   color: 'primary',
+    //   text: 'NEW',
+    // },
   },
+  // {
+  //   component: 'CNavItem',
+  //   name: 'Tables',
+  //   to: '/base/tables',
+  // },
 /*
   {
     component: 'CNavTitle',

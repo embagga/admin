@@ -56,6 +56,11 @@ const routes = [
         name: 'Tables',
         component: () => import('@/views/base/Tables.vue'),
       },
+      {
+        path: '/system-users',
+        name: 'System Users',
+        component: () => import('@/views/SystemUsers.vue'),
+      },
     ]
   },
   {
