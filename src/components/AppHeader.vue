@@ -34,7 +34,9 @@
             <CIcon class="mx-2" icon="cil-envelope-open" size="lg" />
           </CNavLink>
         </CNavItem> -->
-        <AppHeaderDropdownAccnt />
+        <!-- <AppHeaderDropdownAccnt /> -->
+
+        <CButton color="danger" @click="handleLogout"> Log Out </CButton>
       </CHeaderNav>
     </CContainer>
     <CHeaderDivider />
@@ -57,6 +59,11 @@ export default {
   setup() {
     return {
       logo,
+      handleLogout: function(){
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+        window.location.href = "/";
+      }
     }
   },
 }

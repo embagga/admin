@@ -372,6 +372,18 @@ const router = createRouter({
     // always scroll to top
     return { top: 0 }
   },
-})
+});
+
+router.beforeEach((to, from) => {
+  if(["Login", "Forgot Password", "Reset Password", "CoreUI Icons"].includes(to.name) == false){
+    var token = localStorage.getItem('token')
+    var user = localStorage.getItem('user')
+    if (!token || !user) {
+      return {
+        name: 'Login',
+      }
+    }
+  }
+});
 
 export default router
