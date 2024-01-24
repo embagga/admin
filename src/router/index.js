@@ -61,6 +61,11 @@ const routes = [
         name: 'System Users',
         component: () => import('@/views/SystemUsers.vue'),
       },
+      {
+        path: '/logs',
+        name: 'System User Activities',
+        component: () => import('@/views/Logs.vue'),
+      },
     ]
   },
   {

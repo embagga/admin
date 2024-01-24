@@ -3,6 +3,36 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 export default {
+    phpTimeToJsDateString(time, withTime = false){
+        if(typeof time == "string"){
+            time = parseFloat(time);
+        }
+        var dtTime = time * 1000;
+        var thisDate = new Date();
+        thisDate.setTime(dtTime);
+        var str = this.getDateString(thisDate, withTime);
+        return str;
+    },
+    getDateString(thisDate, withTime){
+        if (typeof thisDate == "undefined" || thisDate == null) {
+          thisDate = new Date();
+        }
+        if (typeof thisDate == "string") {
+            thisDate = new Date(thisDate);
+          }
+        if (typeof withTime == "undefined" || withTime == null) {
+          withTime = false;
+        }
+        var m = (1 + thisDate.getMonth());
+        m = m < 10 ? ("0" + m) : m;
+        var d = thisDate.getDate();
+        d = d < 10 ? ("0" + d) : d;
+        var thisDateStr = thisDate.getFullYear() + "-" + m + "-" + d;
+        if (withTime == true) {
+          thisDateStr = thisDateStr + " " + thisDate.toLocaleTimeString();
+        }
+        return thisDateStr;
+    },
     jsDateToPhpTimestamp(jsDate){
         if(typeof jsDate == 'string'){
             jsDate = jsDate.trim();

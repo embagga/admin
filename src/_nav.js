@@ -1,4 +1,4 @@
-import {cilBeachAccess, cilMoney, cilUser } from '@coreui/icons'
+import {cilBeachAccess, cilMoney, cilUser, cilList } from '@coreui/icons'
 export default [
   {
     component: 'CNavItem',
@@ -64,6 +64,18 @@ export default [
     to: '/system-users',
     icon: {
       content: cilUser
+    }
+    // badge: {
+    //   color: 'primary',
+    //   text: 'NEW',
+    // },
+  },
+  {
+    component: 'CNavItem',
+    name: 'Audit Trail',
+    to: '/logs',
+    icon: {
+      content: cilList
     }
     // badge: {
     //   color: 'primary',
