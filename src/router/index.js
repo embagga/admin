@@ -11,6 +11,11 @@ const routes = [
     component: () => import('@/views/pages/Login'),
   },
   {
+    path: '/policy',
+    name: 'Policy',
+    component: () => import('@/views/policy'),
+  },
+  {
     path: '/forgot-password',
     name: 'Forgot Password',
     component: () => import('@/views/pages/ForgotPassword'),
@@ -375,7 +380,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from) => {
-  if(["Login", "Forgot Password", "Reset Password", "CoreUI Icons"].includes(to.name) == false){
+  if(["Login", "Forgot Password", "Reset Password", "CoreUI Icons", "Policy"].includes(to.name) == false){
     var token = localStorage.getItem('token')
     var user = localStorage.getItem('user')
     if (!token || !user) {

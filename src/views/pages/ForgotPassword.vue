@@ -71,7 +71,8 @@ export default {
       var vm = this
       var data = {
         _f_forgot: {
-          email: vm.form.phoneNumber
+          email: vm.form.phoneNumber,
+          as: "embaggaapp@gmail.com"
         },
       }
       console.log('data:', data)

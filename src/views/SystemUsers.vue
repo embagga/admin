@@ -168,21 +168,23 @@ export default {
       this.showModal = true
     },
     handleClickDelete(row) {
-      var vm = this
-      var data = {
-        user: {
-          _w: [['id', 'e', row.id]],
-        },
+      if(confirm("Do you really want to remove this user ? ")){
+        var vm = this
+        var data = {
+          user: {
+            _w: [['id', 'e', row.id]],
+          },
+        }
+        //add token
+        Bee.token = localStorage.getItem('token')
+        Bee.delete(data, false, vm)
+          .then((res) => {
+            vm.loadData()
+          })
+          .catch((errors) => {
+            console.log('Errors', errors)
+          })
       }
-      //add token
-      Bee.token = localStorage.getItem('token')
-      Bee.delete(data, false, vm)
-        .then((res) => {
-          vm.loadData()
-        })
-        .catch((errors) => {
-          console.log('Errors', errors)
-        })
     },
     handleModalClose() {
       this.form = getFormData()
