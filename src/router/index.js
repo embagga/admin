@@ -16,6 +16,16 @@ const routes = [
     component: () => import('@/views/policy'),
   },
   {
+    path: '/remove',
+    name: 'Remove',
+    component: () => import('@/views/remove'),
+  },
+  {
+    path: '/suspend',
+    name: 'Suspend',
+    component: () => import('@/views/suspend'),
+  },
+  {
     path: '/forgot-password',
     name: 'Forgot Password',
     component: () => import('@/views/pages/ForgotPassword'),
@@ -380,7 +390,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from) => {
-  if(["Login", "Forgot Password", "Reset Password", "CoreUI Icons", "Policy"].includes(to.name) == false){
+  if(["Login", "Forgot Password", "Reset Password", "CoreUI Icons", "Policy", "Remove", "Suspend"].includes(to.name) == false){
     var token = localStorage.getItem('token')
     var user = localStorage.getItem('user')
     if (!token || !user) {
