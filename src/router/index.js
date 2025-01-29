@@ -88,6 +88,11 @@ const routes = [
     name: 'CoreUI Icons',
     component: () => import('@/views/icons/CoreUIIcons.vue'),
   },
+  {
+    path: '/pesapal/mobile/transaction/complete',
+    name: 'PesaPal Transaction Completed',
+    component: () => import('@/views/PesapalMobileCompleted'),
+  },
 
   // {
   //   path: '/',
@@ -390,7 +395,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from) => {
-  if(["Login", "Forgot Password", "Reset Password", "CoreUI Icons", "Policy", "Remove", "Suspend"].includes(to.name) == false){
+  if(["Login", "Forgot Password", "Reset Password", "CoreUI Icons", "Policy", "Remove", "Suspend", "PesaPal Transaction Completed"].includes(to.name) == false){
     var token = localStorage.getItem('token')
     var user = localStorage.getItem('user')
     if (!token || !user) {
