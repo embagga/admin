@@ -9,7 +9,7 @@
                 <CForm class="text-center">
                   <img class="w-25" :src="LogoImg" alt="logo" />
                   <h4 class="text-medium-emphasis mb-5">
-                    Administration Login 2
+                    Administration Login
                   </h4>
                   <CInputGroup class="mb-3">
                     <CInputGroupText>
