@@ -123,5 +123,14 @@ export default {
         var agoDate = dayjs().to(dayjsDate);
         return agoDate;
 
-    }
+    },
+    comma(val, def = "") {
+        if(val == null){
+            return def;
+        }
+        //https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
+        var t = parseFloat(val);
+        var bt = t.toLocaleString();
+        return bt;
+    },
 }

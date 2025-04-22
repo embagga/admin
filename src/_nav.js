@@ -72,6 +72,31 @@ export default [
   },
   {
     component: 'CNavItem',
+    name: 'Events',
+    to: '/events',
+    icon: {
+      content: cilMoney
+    }
+    // badge: {
+    //   color: 'primary',
+    //   text: 'NEW',
+    // },
+  },
+  {
+    component: 'CNavItem',
+    name: 'Disbursements',
+    to: '/disbursements',
+    icon: {
+      content: cilMoney
+    }
+    // badge: {
+    //   color: 'primary',
+    //   text: 'NEW',
+    // },
+  },
+
+  {
+    component: 'CNavItem',
     name: 'Audit Trail',
     to: '/logs',
     icon: {

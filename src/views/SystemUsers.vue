@@ -201,7 +201,7 @@ export default {
         },
       }
       var rnd = Math.floor(Math.random() * (max - min + 1) + min)
-      var password = 'Psw-' + rnd
+      var password = rnd
       if (thisVM.mode === 'edit') {
         data.user._w = [['id', 'e', thisVM.form.id]]
         method = 'update'

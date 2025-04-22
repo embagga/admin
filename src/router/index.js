@@ -67,6 +67,21 @@ const routes = [
         component: () => import('@/views/AgendaTemplates.vue'),
       },
       {
+        path: '/disbursements',
+        name: 'Disbursements',
+        component: () => import('@/views/Disbursements'),
+      },
+      {
+        path: '/disbursements/:id',
+        name: 'Statements',
+        component: () => import('@/views/Statement'),
+      },
+      {
+        path: '/events',
+        name: 'Events',
+        component: () => import('@/views/Events'),
+      },
+      {
         path: '/base/tables',
         name: 'Tables',
         component: () => import('@/views/base/Tables.vue'),
@@ -93,7 +108,7 @@ const routes = [
     name: 'PesaPal Transaction Completed',
     component: () => import('@/views/PesapalMobileCompleted'),
   },
-
+  
   // {
   //   path: '/',
   //   name: 'Home',
