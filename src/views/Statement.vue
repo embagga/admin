@@ -11,57 +11,39 @@
               <div></div>
             </CCardHeader>
             <CCardBody v-if="event !== null">
-
               <CRow>
+                <CCol :xs="2"> Name: </CCol>
                 <CCol :xs="2">
-                  Name:
+                  <b>{{ event.name }}</b>
                 </CCol>
+                <CCol :xs="1"> Type: </CCol>
+                <CCol :xs="1">
+                  <b>{{ event.event_type.name }}</b>
+                </CCol>
+                <CCol :xs="3"> </CCol>
+                <CCol :xs="1"> Start Date: </CCol>
                 <CCol :xs="2">
-                  <b>{{event.name}}</b>
+                  <b>{{ formatDate(event.start_date) }}</b>
                 </CCol>
-                <CCol :xs="1">
-                  Type:
-                </CCol>
-                <CCol :xs="1">
-                  <b>{{event.event_type.name}}</b>
-                </CCol>
-                <CCol :xs="3">
-                </CCol>
-                <CCol :xs="1">
-                  Start Date:
-                </CCol>
-                <CCol :xs="2">
-                  <b>{{formatDate(event.start_date)}}</b>
-                </CCol>
-                
               </CRow>
 
               <CRow>
-                <CCol :xs="2">
-                  Description:
-                </CCol>
+                <CCol :xs="2"> Description: </CCol>
                 <CCol :xs="10">
-                  <b>{{event.name}}</b>
+                  <b>{{ event.name }}</b>
                 </CCol>
               </CRow>
 
               <CRow>
-                <CCol :xs="2">
-                  Balance:
-                </CCol>
+                <CCol :xs="2"> Balance: </CCol>
                 <CCol :xs="7">
-                  <b>{{comma(balance)}}</b>
+                  <b>{{ comma(balance) }}</b>
                 </CCol>
-                <CCol :xs="1">
-                  End Date:
-                </CCol>
+                <CCol :xs="1"> End Date: </CCol>
                 <CCol :xs="2">
-                  <b>{{formatDate(event.end_date)}}</b>
+                  <b>{{ formatDate(event.end_date) }}</b>
                 </CCol>
               </CRow>
-
-
-              
             </CCardBody>
           </CCard>
         </CCol>
@@ -87,7 +69,22 @@
                     <CTableHeaderCell
                       scope="col"
                       style="max-width: 100px; text-align: right"
-                      >AMOUNT</CTableHeaderCell
+                      >TRX AMOUNT</CTableHeaderCell
+                    >
+                    <CTableHeaderCell
+                      scope="col"
+                      style="max-width: 100px; text-align: right"
+                      >% CHARGES</CTableHeaderCell
+                    >
+                    <CTableHeaderCell
+                      scope="col"
+                      style="max-width: 100px; text-align: right"
+                      >CHARGED AMOUNT</CTableHeaderCell
+                    >
+                    <CTableHeaderCell
+                      scope="col"
+                      style="max-width: 100px; text-align: right"
+                      >AFTER CHARGES</CTableHeaderCell
                     >
                     <CTableHeaderCell
                       scope="col"
@@ -122,6 +119,21 @@
 
                     <CTableDataCell
                       style="max-width: 100px; text-align: right"
+                      >{{ comma(balanceEntry.incoming) }}</CTableDataCell
+                    >
+
+                     <CTableDataCell
+                      style="max-width: 100px; text-align: right"
+                      >{{ comma(balanceEntry.total_percentage_charges) }}</CTableDataCell
+                    >
+
+                    <CTableDataCell
+                      style="max-width: 100px; text-align: right"
+                      >{{ comma(balanceEntry.total_amount_charged) }}</CTableDataCell
+                    >
+
+                    <CTableDataCell
+                      style="max-width: 100px; text-align: right"
                       >{{ comma(balanceEntry.amount) }}</CTableDataCell
                     >
 
@@ -149,12 +161,18 @@ function createBalanceStatement(contributions, withdrawals) {
     ...contributions.map((c) => ({
       ...c,
       date: c.transaction_start_date,
-      amount: parseFloat(c.amount),
+      incoming: parseFloat(c.amount),
+      total_percentage_charges: parseFloat(c.total_percentage_charges),
+      total_amount_charged: parseFloat(c.total_amount_charged),
+      amount: parseFloat(c.amount_after_charges),
       type: 'contribution',
     })),
     ...withdrawals.map((w) => ({
       ...w,
       date: w.transaction_date,
+      incoming:  parseFloat(w.amount),
+      total_percentage_charges: 0,
+      total_amount_charged: 0,
       amount: -1 * parseFloat(w.amount), // Negative amount for withdrawals
       type: 'withdrawal',
     })),
@@ -180,7 +198,7 @@ function createBalanceStatement(contributions, withdrawals) {
 }
 
 export default {
-  name: 'System Logs',
+  name: 'Event Statement',
   data: function () {
     return {
       displayedData: [],
@@ -204,13 +222,17 @@ export default {
           _w: [
             [
               [
-                ['associated_event_id_if_needed', 'e', eventId],
+                [
+                  ['status', 'e', 'COMPLETED'],
+                  'OR',
+                  ['status', 'e', 'success'],
+                ],
                 'AND',
-                ['context', 'e', 'contribution'],
+                ['associated_event_id_if_needed', 'e', eventId],
               ],
               'AND',
-              ['status', 'e', 'success'],
-            ],
+              ['context', 'e', 'contribution'],
+            ]
           ],
         },
         withdraws: {

@@ -36,6 +36,16 @@
                 <CTableHeaderCell
                   scope="col"
                   style="min-width: 100px; text-align: right"
+                  >INCOMING</CTableHeaderCell
+                >
+                <CTableHeaderCell
+                  scope="col"
+                  style="min-width: 100px; text-align: right"
+                  >CHARGED</CTableHeaderCell
+                >
+                <CTableHeaderCell
+                  scope="col"
+                  style="min-width: 100px; text-align: right"
                   >RECEIVED</CTableHeaderCell
                 >
                 <CTableHeaderCell
@@ -59,6 +69,12 @@
                 <CTableDataCell>{{ event.id }}</CTableDataCell>
                 <CTableDataCell>{{ event.name }}</CTableDataCell>
                 <CTableDataCell>{{ event.user.name }}</CTableDataCell>
+                <CTableDataCell style="min-width: 100px; text-align: right">{{
+                  event.total_amount.toLocaleString()
+                }}</CTableDataCell>
+                <CTableDataCell style="min-width: 100px; text-align: right">{{
+                  event.total_charged.toLocaleString()
+                }}</CTableDataCell>
                 <CTableDataCell style="min-width: 100px; text-align: right">{{
                   event.total_received.toLocaleString()
                 }}</CTableDataCell>
@@ -199,11 +215,11 @@ export default {
           _desc: ['time_inserted'],
         },
         transactions: {
-          _a: '_sum_amount...amount associated_event_id_if_needed',
+          _a: '_sum_amount...amount _sum_total_amount_charged...total_amount_charged _sum_amount_after_charges...amount_after_charges associated_event_id_if_needed ',
           _gb: ['associated_event_id_if_needed'],
           _w: [
             [
-              ['status', 'e', 'success'],
+              [['status', 'e', 'COMPLETED'], 'OR', ['status', 'e', 'success']],
               'AND',
               ['context', 'e', 'contribution'],
             ],
@@ -226,11 +242,26 @@ export default {
             const transaction = transactions[index]
             const eventId = parseInt(transaction.associated_event_id_if_needed)
             if (
-              !Object.prototype.hasOwnProperty.call(indexedTransactions, eventId)
+              !Object.prototype.hasOwnProperty.call(
+                indexedTransactions,
+                eventId,
+              )
             ) {
-              indexedTransactions[eventId] = 0;
+              indexedTransactions[eventId] = {
+                amount: 0,
+                total_amount_charged: 0,
+                amount_after_charges: 0,
+              }
             }
-            indexedTransactions[eventId] = transaction.amount
+            indexedTransactions[eventId] = {
+              amount: parseFloat(transaction.amount),
+              total_amount_charged: parseFloat(
+                transaction.total_amount_charged,
+              ),
+              amount_after_charges: parseFloat(
+                transaction.amount_after_charges,
+              )
+            }
           }
           const withdraws = res.withdraws
           const indexedWithdraws = {}
@@ -240,17 +271,21 @@ export default {
             if (
               !Object.prototype.hasOwnProperty.call(indexedWithdraws, eventId)
             ) {
-              indexedWithdraws[eventId] = 0;
+              indexedWithdraws[eventId] = 0
             }
             indexedWithdraws[eventId] = withdraw.amount
           }
           const events = res.events.map((event) => {
             const eventId = parseInt(event.id)
+            let total_amount = 0
+            let total_charged = 0
             let total_received = 0
             if (
               Object.prototype.hasOwnProperty.call(indexedTransactions, eventId)
             ) {
-              total_received = indexedTransactions[eventId]
+              total_amount = indexedTransactions[eventId].amount
+              total_charged = indexedTransactions[eventId].total_amount_charged
+              total_received = indexedTransactions[eventId].amount_after_charges
             }
             let total_withdrawn = 0
             if (
@@ -258,9 +293,12 @@ export default {
             ) {
               total_withdrawn = indexedWithdraws[eventId]
             }
-            const received_balance = total_received - total_withdrawn
+            
+            event.total_amount = total_amount
+            event.total_charged = total_charged
             event.total_received = total_received
             event.total_withdrawn = total_withdrawn
+            const received_balance = total_received - total_withdrawn
             event.received_balance = received_balance
             return event
           })
@@ -287,8 +325,8 @@ export default {
           const eventName = event.name.toLowerCase()
           let score = 0
           // by id first
-          if(event.id.toString() === searchTerm.toLowerCase()){
-            score += 1;
+          if (event.id.toString() === searchTerm.toLowerCase()) {
+            score += 1
           }
           for (let j = 0; j < searchTerms.length; j++) {
             const query = searchTerms[j]
@@ -353,7 +391,7 @@ export default {
         .catch((errors) => {
           console.log('Errors', errors)
         })
-    }
+    },
   },
   mounted() {
     this.loadData()
